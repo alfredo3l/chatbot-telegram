@@ -1,5 +1,5 @@
-# Conteúdo do README em Markdown
-readme_content = """
+
+
 # 📘 README
 
 Este projeto implementa um **chatbot de clima no Telegram**, desenvolvido no **n8n**, que consulta a **OpenWeather API** para retornar a temperatura atual de uma cidade brasileira informada pelo usuário.
