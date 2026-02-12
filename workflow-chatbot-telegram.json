@@ -1,0 +1,250 @@
+{
+  "name": "[Bot Clima Rocket Seat]",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        464,
+        -80
+      ],
+      "id": "caeaf709-4714-4410-b3a5-9013aef4dcb2",
+      "name": "Telegram Trigger",
+      "webhookId": "3705b601-d076-434f-ae4d-50657ef1eaff",
+      "credentials": {
+        "telegramApi": {
+          "id": "MW7i28diqJsuXjcv",
+          "name": "Previsao Tempo Rocket Seat"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6014bc0a-9be3-43b9-a216-65f258c17dc7",
+              "name": "queue",
+              "value": "={{ $json.message.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        752,
+        -80
+      ],
+      "id": "a99e807e-8633-4345-a388-39344bca5e1b",
+      "name": "seta_Variavel"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "5b88edc5-2518-466a-8d43-cf437946eba5",
+              "leftValue": "={{ $json.error }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1264,
+        -80
+      ],
+      "id": "14011668-6d9a-481e-9836-52b2da67597b",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "url": "https://api.openweathermap.org/data/2.5/weather",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "={{ $json.queue }}"
+            },
+            {
+              "name": "units",
+              "value": "metric"
+            },
+            {
+              "name": "lang",
+              "value": "pt_br"
+            },
+            {
+              "name": "appid",
+              "value": "29b1334dcc70fcdb21266a3f5043127c"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1024,
+        -80
+      ],
+      "id": "350e699d-92b2-4ec2-9c34-7e2f4e69fad7",
+      "name": "HTTP Previsao do Tempo",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+        "text": "=❌ Cidade não encontrada. Verifique se o nome foi digitado correto e tente novamente por favor.",
+        "replyMarkup": "forceReply",
+        "forceReply": {},
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1488,
+        192
+      ],
+      "id": "cbd65999-5e1d-40fa-baf1-421db112c298",
+      "name": "Mensagem de Erro",
+      "webhookId": "4acee857-86a7-47cf-b857-59da2da00fbc",
+      "retryOnFail": false,
+      "credentials": {
+        "telegramApi": {
+          "id": "MW7i28diqJsuXjcv",
+          "name": "Previsao Tempo Rocket Seat"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+        "text": "=🌤️ A temperatura em {{ $('seta_Variavel').item.json.queue }} é de {{ Math.round($json.main.temp) }}°C.",
+        "replyMarkup": "forceReply",
+        "forceReply": {},
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1488,
+        -96
+      ],
+      "id": "1801a5ad-bb0e-4f8c-9e89-4342550f9790",
+      "name": "Mensagem de Resposta da Pergunta",
+      "webhookId": "4acee857-86a7-47cf-b857-59da2da00fbc",
+      "retryOnFail": false,
+      "credentials": {
+        "telegramApi": {
+          "id": "MW7i28diqJsuXjcv",
+          "name": "Previsao Tempo Rocket Seat"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "seta_Variavel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "seta_Variavel": {
+      "main": [
+        [
+          {
+            "node": "HTTP Previsao do Tempo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Mensagem de Resposta da Pergunta",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Mensagem de Erro",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Previsao do Tempo": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mensagem de Resposta da Pergunta": {
+      "main": [
+        [],
+        []
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false,
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": "ebJk0Lh3HwAysN53"
+  },
+  "versionId": "3467dc5e-3216-406d-a59f-ea2df920f063",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "df3c5ee72646603a46038a8bf98cfe3d0def4c308b534bfb5be70fd76c8f0bb6"
+  },
+  "id": "yBSnlOW7pYtBZAdA",
+  "tags": []
+}
