@@ -1,50 +1,148 @@
-
-
 # 📘 README
 
-Este projeto implementa um **chatbot de clima no Telegram**, desenvolvido no **n8n**, que consulta a **OpenWeather API** para retornar a temperatura atual de uma cidade brasileira informada pelo usuário.
+Este projeto implementa um **Chatbot Inteligente de Clima no Telegram**, desenvolvido no **n8n**, que consulta a **OpenWeather API** para retornar a **temperatura atual de qualquer município do Brasil e do mundo** informado pelo usuário.
 
-O bot valida o formato da entrada, consulta a API de clima e responde automaticamente no Telegram sempre que o usuário enviar uma nova mensagem.
+O bot possui:
+
+- Tratamento inteligente de mensagens
+- Identificação de cumprimento
+- Respostas dinâmicas e humanizadas
+- Agente de fallback para mensagens fora do contexto
+- Integração com memória de conversa
+- Experiência amigável e profissional
+
+---
+
+# 🌤️ Visão Geral do Projeto
+
+O sistema é composto por múltiplos agentes organizados no workflow:
+
+1. **Classificador de intenção**
+2. **Agente principal de temperatura**
+3. **Agente fallback (fora de contexto)**
+4. **Integração com OpenWeather**
+5. **Resposta dinâmica personalizada**
+
+O objetivo é oferecer uma experiência natural, amigável e focada exclusivamente em **temperatura atual**.
 
 ---
 
 # 📌 Funcionalidades
 
-- Integração com **Telegram Bot**
-- Consulta de clima em tempo real via **OpenWeather**
-- Validação de entrada no formato `Cidade,UF`
-- Respostas automáticas e contínuas (workflow publicado)
-- Tratamento de erro para cidades inválidas
+- ✅ Integração com **Telegram Bot**
+- ✅ Consulta de temperatura em tempo real via **OpenWeather**
+- ✅ Identificação automática de cumprimento
+- ✅ Resposta personalizada com nome do usuário
+- ✅ Resposta adaptativa conforme temperatura (frio, ameno, quente)
+- ✅ Tratamento de mensagens fora de contexto
+- ✅ Experiência humanizada
+- ✅ Suporte a mensagens de texto e áudio
+- ✅ Workflow contínuo (publicado)
+
+---
+
+# 🧠 Inteligência Conversacional
+
+O bot possui três comportamentos principais:
+
+## 1️⃣ Cumprimento Inicial
+
+Quando o usuário envia:
+
+- Olá
+- Oi
+- Bom dia
+- Boa tarde
+- Boa noite
+
+O bot:
+
+- Cumprimenta pelo nome
+- Informa data e hora atual
+- Explica que é especializado em temperatura
+- Informa que aceita texto e áudio
+
+Evita repetição caso já tenha cumprimentado anteriormente (controle de memória).
+
+---
+
+## 2️⃣ Consulta de Temperatura
+
+Quando o usuário pergunta:
+
+- Qual a temperatura em Brasília?
+- Temperatura em São Paulo
+- Como está o clima em Lisboa?
+
+O fluxo:
+
+1. Identifica a cidade
+2. Consulta OpenWeather
+3. Retorna a temperatura atual
+4. Humaniza a resposta conforme o valor:
+
+| Faixa de Temperatura | Comportamento |
+|----------------------|--------------|
+| Acima de 30°C        | Indica calor |
+| 20°C – 29°C          | Clima agradável |
+| 15°C – 19°C          | Clima ameno |
+| Abaixo de 15°C       | Indica frio |
+
+⚠️ O bot **não fornece previsão futura**, apenas temperatura atual.
+
+---
+
+## 3️⃣ Mensagens Fora de Contexto (Fallback)
+
+Se o usuário enviar algo como:
+
+- “Me dê uma receita de bolo”
+- “Conte uma piada”
+- “Quem descobriu o Brasil?”
+
+O agente fallback responde cordialmente:
+
+> Este assistente é especializado em informar a temperatura atual de municípios do Brasil e do mundo 🌤️  
+> Esse tipo de solicitação não faz parte do seu campo de atuação.
+
+E orienta o usuário a reformular dentro do contexto correto.
 
 ---
 
 # 📂 Estrutura do Workflow
 
-Fluxo principal do workflow:
+Fluxo principal:
 
 1. **Telegram Trigger**  
-   Recebe mensagens enviadas ao bot.
+   Recebe mensagens do usuário.
 
-2. **Entrada (cidade/UF)**  
-   Normaliza e prepara a entrada do usuário.
+2. **Classificador de Intenção**  
+   Identifica:
+   - Cumprimento
+   - Consulta de temperatura
+   - Fora de contexto
 
-3. **Formato válido? (IF)**  
-   Verifica se a entrada segue o padrão `Cidade,UF`.
+3. **Tratamento de Cumprimento**  
+   Gera resposta inicial personalizada.
 
-4. **Montar query (q)**  
-   Constrói a query no formato aceito pela OpenWeather (`Cidade,UF,BR`).
+4. **Preparar Query OpenWeather**  
+   Monta a requisição HTTP.
 
-5. **Consultar OpenWeather**  
-   Realiza a chamada HTTP para a OpenWeather API.
+5. **Consultar OpenWeather (HTTP Request)**  
+   Chamada à API.
 
-6. **Status 200? (IF)**  
-   Verifica se a resposta da API indica sucesso.
+6. **Formatação Dinâmica da Resposta**  
+   Transforma:
 
-7. **Mensagem: sucesso / Mensagem: erro**  
-   Monta a resposta adequada para o usuário.
+   🌤️ A temperatura em Cidade é de XX°C
 
-8. **Telegram – Enviar mensagem**  
-   Envia a resposta final ao chat do usuário.
+   em resposta humanizada.
+
+7. **Fallback (fora de contexto)**  
+Resposta redirecionadora.
+
+8. **Telegram – Enviar Mensagem**  
+Retorna resposta ao usuário.
 
 ---
 
@@ -52,105 +150,149 @@ Fluxo principal do workflow:
 
 1. Acesse o painel do n8n.
 2. Vá em **Workflows → Import from file**.
-3. Selecione o arquivo JSON do workflow.
+3. Selecione o arquivo JSON.
 4. Salve o workflow.
 
 ---
 
-# 🔐 Configuração das credenciais
+# 🔐 Configuração das Credenciais
 
 ## 1️⃣ Telegram Bot
 
-### Criar o bot
+### Criar o Bot
 
-1. No Telegram, converse com o **@BotFather**.
-2. Crie um novo bot usando `/newbot`.
-3. Copie o **Bot Token** fornecido.
+1. No Telegram, converse com **@BotFather**.
+2. Use `/newbot`.
+3. Copie o **Bot Token**.
 
 ### Configurar no n8n
 
-1. Vá em **Credentials → New**.
-2. Escolha **Telegram API**.
-3. Preencha:
-   - **Bot Token:** `TELEGRAM_BOT_TOKEN`
-4. Salve a credencial.
+1. Vá em **Credentials → New**
+2. Escolha **Telegram API**
+3. Insira o Bot Token
+4. Salve
 
 ---
 
 ## 2️⃣ OpenWeather API
 
-### Obter a API Key
+### Obter API Key
 
-1. Crie uma conta em:  
-   https://openweathermap.org/
-2. Gere uma **API Key** no painel da conta.
+1. Acesse:
+https://openweathermap.org/
+2. Crie uma conta
+3. Gere uma API Key
 
 ---
 
 ### Configurar no n8n
 
-### Opção A — Variável de ambiente (recomendado)
+#### Opção A — Variável de Ambiente (Recomendado)
 
-Defina no ambiente onde o n8n está rodando (ex: Docker):
+Defina:
+
+OPENWEATHER_API_KEY=sua_chave_aqui
 
 
-Reinicie o n8n após adicionar a variável.
+Reinicie o n8n após definir.
 
----
+#### Opção B — Credencial no n8n
 
-### Opção B — Credencial do n8n
-
-1. Vá em **Credentials → New**.
-2. Escolha **OpenWeatherMap API**.
-3. Insira a API Key.
-4. Associe a credencial ao nó **Consultar OpenWeather**.
-
----
-
-# ⚙️ Variáveis esperadas
-
-| Variável              | Descrição                         |
-|-----------------------|----------------------------------|
-| OPENWEATHER_API_KEY   | Chave da OpenWeather API         |
-| TELEGRAM_BOT_TOKEN    | Token do bot do Telegram         |
+1. Vá em **Credentials → New**
+2. Escolha **HTTP Header Auth** ou similar
+3. Insira a API Key
+4. Associe ao nó HTTP
 
 ---
 
-# ▶️ Publicar o workflow (obrigatório)
+# ⚙️ Variáveis Utilizadas
 
-Para que o bot funcione continuamente:
-
-1. Abra o workflow no n8n.
-2. Clique em **Publish / Publicar** no topo da tela.
-3. Após publicado:
-   - O webhook é registrado no Telegram
-   - O bot passa a responder sempre que receber mensagens
-
-⚠️ Se você reiniciar a máquina ou usar ngrok, será necessário publicar novamente.
+| Variável | Descrição |
+|----------|----------|
+| OPENWEATHER_API_KEY | Chave da API OpenWeather |
+| TELEGRAM_BOT_TOKEN | Token do Bot Telegram |
 
 ---
 
-# 🧪 Como usar o chatbot
+# ▶️ Publicar o Workflow (Obrigatório)
 
-No Telegram, envie mensagens no formato:
+1. Abra o workflow
+2. Clique em **Publish**
+3. Após publicar:
+   - O webhook é registrado
+   - O bot passa a responder automaticamente
 
-
-### Exemplos:
-
-Cidade,UF
-
----
-
-## ✅ Resposta de sucesso
-
-☁️ A temperatura em Curitiba é de 24°C
+⚠️ Se reiniciar máquina ou usar ngrok, será necessário publicar novamente.
 
 ---
 
-## ❌ Resposta de erro
+# 🧪 Como Usar o Chatbot
 
+No Telegram, envie:
 
-❌ Cidade não encontrada. Use o formato Cidade,UF (ex.: São Paulo,SP).
+### Exemplos válidos:
 
+- Qual a temperatura em Brasília?
+- Temperatura em São Paulo
+- Como está o clima em Lisboa?
+- Rio de Janeiro
 
+---
+
+## ✅ Exemplo de Resposta
+
+Alfredo, neste momento a temperatura em Brasília está em 32°C ☀️  
+
+Está um clima bem quente por aí.
+
+---
+
+## ❌ Exemplo Fora de Contexto
+
+Pergunta:
+> Me dê uma receita de bolo
+
+Resposta:
+> Este assistente é especializado em informar a temperatura atual de municípios do Brasil e do mundo 🌤️  
+> Esse tipo de solicitação não faz parte do seu campo de atuação.
+
+---
+
+# 🏗️ Tecnologias Utilizadas
+
+- **n8n**
+- **Telegram Bot API**
+- **OpenWeather API**
+- **HTTP Request Node**
+- **IF Nodes (validação lógica)**
+
+---
+
+# 🎯 Escopo do Projeto
+
+✔️ Temperatura atual  
+✔️ Resposta humanizada  
+✔️ Tratamento de erro  
+✔️ Controle de contexto  
+
+❌ Não fornece previsão futura  
+❌ Não responde perguntas gerais  
+❌ Não executa múltiplas funções  
+
+---
+
+# 📈 Evoluções Futuras Possíveis
+
+- Sensação térmica
+- Umidade
+- Condição climática (chuva, nublado)
+- Histórico de consultas
+- Dashboard administrativo
+
+---
+
+# 👨‍💻 Autor
+
+Projeto desenvolvido com n8n + OpenWeather + Telegram  
+Chatbot especializado em temperatura atual 🌤️
 
