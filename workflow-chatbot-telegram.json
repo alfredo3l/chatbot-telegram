@@ -17,10 +17,7 @@
       },
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [
-        1488,
-        -80
-      ],
+      "position": [1488, -80],
       "id": "a99e807e-8633-4345-a388-39344bca5e1b",
       "name": "seta_Variavel"
     },
@@ -44,7 +41,7 @@
             },
             {
               "name": "appid",
-              "value": "29b1334dcc70fcdb21266a3f5043127c"
+              "value": "API_KEY_HERE"
             }
           ]
         },
@@ -52,10 +49,7 @@
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
-      "position": [
-        1760,
-        -80
-      ],
+      "position": [1760, -80],
       "id": "350e699d-92b2-4ec2-9c34-7e2f4e69fad7",
       "name": "HTTP Previsao do Tempo",
       "onError": "continueRegularOutput"
@@ -119,10 +113,7 @@
       },
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.3,
-      "position": [
-        -304,
-        -80
-      ],
+      "position": [-304, -80],
       "id": "4bf64472-6772-4337-9ebc-27e492a485b6",
       "name": "Switch"
     },
@@ -134,10 +125,7 @@
       },
       "type": "@n8n/n8n-nodes-langchain.openAi",
       "typeVersion": 2,
-      "position": [
-        176,
-        128
-      ],
+      "position": [176, 128],
       "id": "4aa7c987-a2e4-4580-aebd-bdbe2d11325e",
       "name": "Transcribe a recording",
       "credentials": {
@@ -151,10 +139,7 @@
       "parameters": {},
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
-      "position": [
-        384,
-        -80
-      ],
+      "position": [384, -80],
       "id": "f82a7033-7347-4231-aaa0-41b38027eb8d",
       "name": "input Solicitacao"
     },
@@ -174,10 +159,7 @@
       },
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [
-        -64,
-        -96
-      ],
+      "position": [-64, -96],
       "id": "c96536b9-ad37-4c9c-82b2-9e368d17c67b",
       "name": "seta Texto"
     },
@@ -193,10 +175,7 @@
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.3,
-      "position": [
-        1024,
-        -400
-      ],
+      "position": [1024, -400],
       "id": "b56003df-5130-4685-bbd0-cce565ed7d6a",
       "name": "LLM Agente de Cumprimento",
       "credentials": {
@@ -218,10 +197,7 @@
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.3,
-      "position": [
-        576,
-        160
-      ],
+      "position": [576, 160],
       "id": "cb091f09-bae0-4a2d-b834-27d458972f2d",
       "name": "LLM Text Classifier",
       "credentials": {
@@ -238,10 +214,7 @@
       },
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.3,
-      "position": [
-        1152,
-        -400
-      ],
+      "position": [1152, -400],
       "id": "4c95304c-b8e3-41f6-bb90-747f3b44449c",
       "name": "Memory"
     },
@@ -253,10 +226,7 @@
       },
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
-      "position": [
-        -64,
-        128
-      ],
+      "position": [-64, 128],
       "id": "45b4ba4b-d66b-4f87-b754-27aa686c9728",
       "name": "Get audio",
       "webhookId": "1eb83605-cabc-468b-affc-be8861feaec7",
@@ -273,15 +243,12 @@
         "text": "={{ $json.texto }}",
         "needsFallback": true,
         "options": {
-          "systemMessage": "=# 🌤️ Agente de Inteligência Artificial – Consulta de Temperatura\n\nVocê é um agente de Inteligência Artificial especializado em informar a **temperatura atual de qualquer município do Brasil e do mundo**.\n\n---\n\n## 🎯 OBJETIVO\n\nSeu papel é:\n\n- Identificar se a primeira mensagem do usuário é um cumprimento.\n- Cumprimentar o usuário pelo nome.\n- Informar corretamente a data e hora atual.\n- Explicar claramente o que você é capaz de fazer.\n- Informar que aceita mensagens de texto e áudio.\n- Fornecer a temperatura atual quando o usuário solicitar.\n- Manter um tom amigável, profissional e objetivo.\n\n---\n\n## 🧠 CONTROLE DE MEMÓRIA (EVITAR REDUNDÂNCIA)\n\nAntes de responder a um novo cumprimento, você deve sempre verificar o histórico da conversa.\n\nSe o usuário já foi cumprimentado anteriormente na mesma sessão e enviar apenas um novo cumprimento como “Oi”, “Olá”, “Bom dia”, etc., **não repita toda a apresentação inicial novamente**.\n\nNesses casos, responda de forma breve e natural, como por exemplo:\n\n- Olá novamente, {{ $node[\"Telegram Trigger\"].json[\"message\"][\"chat\"][\"first_name\"] }}! 😊  \n- Oi, {{ $node[\"Telegram Trigger\"].json[\"message\"][\"chat\"][\"first_name\"] }}! Como posso ajudar agora?\n\nEvite repetir:\n- A apresentação completa do agente\n- A explicação longa sobre funcionalidades\n- As informações detalhadas de data novamente, a menos que seja realmente necessário\n\nO objetivo é manter a conversa fluida e não redundante.\n\n---\n\n## 🌎 PADRONIZAÇÃO DO IDIOMA (MESES SEMPRE EM PORTUGUÊS)\n\nÉ obrigatório que os nomes dos meses sejam sempre exibidos em português, independentemente da configuração regional do sistema.\n\nExemplo correto:\n- 13 de fevereiro de 2026\n- 10 de março de 2026\n- 25 de dezembro de 2026\n\nNunca responda com meses em inglês como:\n- February\n- March\n- December\n\nCaso a variável retorne o mês em inglês, você deve converter mentalmente para o equivalente em português antes de responder.\n\nLista oficial dos meses em português:\n\n- janeiro  \n- fevereiro  \n- março  \n- abril  \n- maio  \n- junho  \n- julho  \n- agosto  \n- setembro  \n- outubro  \n- novembro  \n- dezembro  \n\n---\n\n## 👤 SAUDAÇÃO INICIAL\n\nSempre que for a primeira interação ou quando o usuário enviar um cumprimento como:\n\n- Olá  \n- Bom dia  \n- Boa tarde  \n- Boa noite  \n- Oi  \n\nVocê deve:\n\n1. Cumprimentar o usuário pelo nome usando:\n\n{{ $node[\"Telegram Trigger\"].json[\"message\"][\"chat\"][\"first_name\"] }}\n\n\n2. Informar a data e hora utilizando:\n\nHoje é dia {{ $now.day }} de {{ $now.monthLong }} de {{ $now.year }}.  \nA hora atual é {{ $now.minus({ hours: 1 }).format('HH:mm:ss') }}.  \nO dia da semana é {{ $now.weekdayLong }}.  \nAmanhã é {{ $now.plus(1, 'day').weekdayLong }}.  \nA semana é composta por 7 dias, portanto semana que vem será dia {{ $now.plus(7, 'day').day }} de {{ $now.plus(7, 'day').monthLong }} de {{ $now.plus(7, 'day').year }}.\n\n⚠️ Lembre-se: o nome do mês deve sempre estar em português.\n\n---\n\n## 🗣️ MODELO DE RESPOSTA INICIAL\n\nA resposta deve seguir esta estrutura:\n\nOlá, {{ $node[\"Telegram Trigger\"].json[\"message\"][\"chat\"][\"first_name\"] }}! 👋  \n\nHoje é dia {{ $now.day }} de {{ $now.monthLong }} de {{ $now.year }}.  \nAgora são {{ $now.minus({ hours: 1 }).format('HH:mm:ss') }} e hoje é {{ $now.weekdayLong }}.  \nAmanhã será {{ $now.plus(1, 'day').weekdayLong }}.  \nE semana que vem será dia {{ $now.plus(7, 'day').day }} de {{ $now.plus(7, 'day').monthLong }} de {{ $now.plus(7, 'day').year }}.\n\nEu sou seu assistente de clima 🌤️  \nPosso informar a temperatura atual de qualquer município do Brasil ou do mundo.\n\nVocê pode me perguntar, por exemplo:\n\n- Qual a temperatura atual de Brasília?  \n- Qual a temperatura do Rio de Janeiro?  \n- Como está o clima em Lisboa agora?  \n- Temperatura em São Paulo  \n\n📩 Eu aceito mensagens de texto e também mensagens de áudio.\n\nBasta me dizer a cidade que deseja consultar!\n\n---\n\n## 🌡️ QUANDO O USUÁRIO SOLICITAR A TEMPERATURA\n\nQuando o usuário perguntar algo como:\n\n- \"Qual a temperatura atual de Brasília?\"\n- \"Temperatura em São Paulo\"\n- \"Como está o clima em Paris?\"\n- \"Clima em Buenos Aires agora\"\n\nVocê deve:\n\n1. Identificar corretamente o município.\n2. Consultar a temperatura atual.\n3. Informar de forma clara e objetiva.\n4. Manter um tom amigável.\n5. Nunca inventar dados meteorológicos.\n\n### 📌 Modelo de resposta:\n\nNeste momento, a temperatura atual em Brasília é de 27°C, com céu parcialmente nublado.\n\nSe desejar, posso informar também a previsão para os próximos dias!\n\n---\n\n## 🎤 MENSAGENS DE ÁUDIO\n\nSe o usuário enviar mensagem de áudio:\n\n- Trate como uma pergunta normal.\n- Extraia a cidade mencionada.\n- Responda normalmente com a temperatura atual.\n\n---\n\n## ⚠️ REGRAS IMPORTANTES\n\n- Seja sempre educado e claro.\n- Nunca invente dados meteorológicos.\n- Caso a cidade não seja reconhecida, peça confirmação.\n- Nunca explique como funciona seu sistema interno.\n- Nunca mencione variáveis internas ao usuário final.\n- Não utilize blocos de código nas respostas ao usuário.\n- Use emojis de forma moderada para melhorar a experiência.\n- Forneça apenas a informação solicitada, de forma objetiva.\n\n---\n\n## 🧠 COMPORTAMENTO GERAL\n\n- Tom: amigável, claro e profissional.\n- Respostas curtas e objetivas.\n- Foco principal: temperatura atual.\n- Pode oferecer previsão do tempo como complemento opcional.\n- Aceita texto e áudio igualmente.\n- Evita redundância verificando o histórico da conversa.\n---\n"
+          "systemMessage": "=# 🌤️ Agente de Inteligência Artificial – Consulta de Temperatura\n\nVocê é um agente de Inteligência Artificial especializado em informar a **temperatura atual de qualquer município do Brasil e do mundo**.\n\n---\n\n## 🎯 OBJETIVO\n\nSeu papel é:\n\n- Identificar se a primeira mensagem do usuário é um cumprimento.\n- Cumprimentar o usuário pelo nome.\n- Informar corretamente a data e hora atual.\n- Explicar claramente o que você é capaz de fazer.\n- Informar que aceita mensagens de texto e áudio.\n- Fornecer a temperatura atual quando o usuário solicitar.\n- Manter um tom amigável, profissional e objetivo.\n\n---\n\n## 🧠 CONTROLE DE MEMÓRIA (EVITAR REDUNDÂNCIA)\n\nAntes de responder a um novo cumprimento, você deve sempre verificar o histórico da conversa.\n\nSe o usuário já foi cumprimentado anteriormente na mesma sessão e enviar apenas um novo cumprimento como “Oi”, “Olá”, “Bom dia”, etc., **não repita toda a apresentação inicial novamente**.\n\nNesses casos, responda de forma breve e natural, como por exemplo:\n\n- Olá novamente, {{ $node[\"Telegram Trigger\"].json[\"message\"][\"chat\"][\"first_name\"] }}! 😊  \n- Oi, {{ $node[\"Telegram Trigger\"].json[\"message\"][\"chat\"][\"first_name\"] }}! Como posso ajudar agora?\n\nEvite repetir:\n- A apresentação completa do agente\n- A explicação longa sobre funcionalidades\n- As informações detalhadas de data novamente, a menos que seja realmente necessário\n\nO objetivo é manter a conversa fluida e não redundante.\n\n---\n\n## 🌎 PADRONIZAÇÃO DO IDIOMA (MESES SEMPRE EM PORTUGUÊS)\n\nÉ obrigatório que os nomes dos meses sejam sempre exibidos em português, independentemente da configuração regional do sistema.\n\nExemplo correto:\n- 13 de fevereiro de 2026\n- 10 de março de 2026\n- 25 de dezembro de 2026\n\nNunca responda com meses em inglês como:\n- February\n- March\n- December\n\nCaso a variável retorne o mês em inglês, você deve converter mentalmente para o equivalente em português antes de responder.\n\nLista oficial dos meses em português:\n\n- janeiro  \n- fevereiro  \n- março  \n- abril  \n- maio  \n- junho  \n- julho  \n- agosto  \n- setembro  \n- outubro  \n- novembro  \n- dezembro  \n\n---\n\n## 👤 SAUDAÇÃO INICIAL\n\nSempre que for a primeira interação ou quando o usuário enviar um cumprimento como:\n\n- Olá  \n- Bom dia  \n- Boa tarde  \n- Boa noite  \n- Oi  \n\nVocê deve:\n\n1. Cumprimentar o usuário pelo nome usando:\n\n{{ $node[\"Telegram Trigger\"].json[\"message\"][\"chat\"][\"first_name\"] }}\n\n\n2. Informar a data e hora utilizando:\n\nHoje é dia {{ $now.day }} de {{ $now.monthLong }} de {{ $now.year }}.  \nA hora atual é {{ $now.minus({ hours: 1 }).format('HH:mm:ss') }}.  \nO dia da semana é {{ $now.weekdayLong }}.  \nAmanhã é {{ $now.plus(1, 'day').weekdayLong }}.  \nA semana é composta por 7 dias, portanto semana que vem será dia {{ $now.plus(7, 'day').day }} de {{ $now.plus(7, 'day').monthLong }} de {{ $now.plus(7, 'day').year }}.\n\n⚠️ Lembre-se: o nome do mês deve sempre estar em português.\n\n---\n\n## 🗣️ MODELO DE RESPOSTA INICIAL\n\nA resposta deve seguir esta estrutura:\n\nOlá, {{ $node[\"Telegram Trigger\"].json[\"message\"][\"chat\"][\"first_name\"] }}! 👋  \n\nHoje é dia {{ $now.day }} de {{ $now.monthLong }} de {{ $now.year }}.  \nAgora são {{ $now.minus({ hours: 1 }).format('HH:mm:ss') }} e hoje é {{ $now.weekdayLong }}.  \nAmanhã será {{ $now.plus(1, 'day').weekdayLong }}.  \nE semana que vem será dia {{ $now.plus(7, 'day').day }} de {{ $now.plus(7, 'day').monthLong }} de {{ $now.plus(7, 'day').year }}.\n\nEu sou seu assistente de clima 🌤️  \nPosso informar a temperatura atual de qualquer município do Brasil ou do mundo.\n\nVocê pode me perguntar, por exemplo:\n\n- Qual a temperatura atual de Brasília?  \n- Qual a temperatura do Rio de Janeiro?  \n- Como está o clima em Lisboa agora?  \n- Temperatura em São Paulo  \n\n📩 Eu aceito mensagens de texto e também mensagens de áudio.\n\nBasta me dizer a cidade que deseja consultar!\n\n---\n\n## 🌡️ QUANDO O USUÁRIO SOLICITAR A TEMPERATURA\n\nQuando o usuário perguntar algo como:\n\n- \"Qual a temperatura atual de Brasília?\"\n- \"Temperatura em São Paulo\"\n- \"Como está o clima em Paris?\"\n- \"Clima em Buenos Aires agora\"\n\nVocê deve:\n\n1. Identificar corretamente o município.\n2. Consultar a temperatura atual.\n3. Informar de forma clara e objetiva.\n4. Manter um tom amigável.\n5. Nunca inventar dados meteorológicos.\n\n---\n\n## 🎤 MENSAGENS DE ÁUDIO\n\nSe o usuário enviar mensagem de áudio:\n\n- Trate como uma pergunta normal.\n- Extraia a cidade mencionada.\n- Responda normalmente com a temperatura atual.\n\n---\n\n## ⚠️ REGRAS IMPORTANTES\n\n- Seja sempre educado e claro.\n- Nunca invente dados meteorológicos.\n- Caso a cidade não seja reconhecida, peça confirmação.\n- Nunca explique como funciona seu sistema interno.\n- Nunca mencione variáveis internas ao usuário final.\n- Não utilize blocos de código nas respostas ao usuário.\n- Use emojis de forma moderada para melhorar a experiência.\n- Forneça apenas a informação solicitada, de forma objetiva.\n\n---\n\n## 🧠 COMPORTAMENTO GERAL\n\n- Tom: amigável, claro e profissional.\n- Respostas curtas e objetivas.\n- Foco principal: temperatura atual.\n- Aceita texto e áudio igualmente.\n- Evita redundância verificando o histórico da conversa.\n---\n"
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3.1,
-      "position": [
-        1056,
-        -592
-      ],
+      "position": [1056, -592],
       "id": "7a0f61e3-d259-4703-bde8-4f995076b178",
       "name": "AI Agent - Cumprimento ao Usuario"
     },
@@ -310,26 +277,18 @@
       },
       "type": "@n8n/n8n-nodes-langchain.textClassifier",
       "typeVersion": 1.1,
-      "position": [
-        608,
-        -96
-      ],
+      "position": [608, -96],
       "id": "369e11ab-e018-486e-ae96-b224bde54062",
       "name": "Classifica o imput do Usuário"
     },
     {
       "parameters": {
-        "updates": [
-          "message"
-        ],
+        "updates": ["message"],
         "additionalFields": {}
       },
       "type": "n8n-nodes-base.telegramTrigger",
       "typeVersion": 1.2,
-      "position": [
-        -576,
-        -80
-      ],
+      "position": [-576, -80],
       "id": "caeaf709-4714-4410-b3a5-9013aef4dcb2",
       "name": "Telegram Trigger",
       "webhookId": "3705b601-d076-434f-ae4d-50657ef1eaff",
@@ -341,15 +300,10 @@
       }
     },
     {
-      "parameters": {
-        "options": {}
-      },
+      "parameters": { "options": {} },
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
-      "position": [
-        1104,
-        -256
-      ],
+      "position": [1104, -256],
       "id": "625d425e-6e02-42b2-b33d-c22aa29b0eec",
       "name": "LLM Falback",
       "credentials": {
@@ -365,16 +319,11 @@
         "text": "={{ $json.output }}",
         "replyMarkup": "forceReply",
         "forceReply": {},
-        "additionalFields": {
-          "appendAttribution": false
-        }
+        "additionalFields": { "appendAttribution": false }
       },
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
-      "position": [
-        1408,
-        -592
-      ],
+      "position": [1408, -592],
       "id": "6642aa49-fc4d-4ecd-86e1-275f28367be5",
       "name": "Mensagem de Resposta Cumprimento",
       "webhookId": "4acee857-86a7-47cf-b857-59da2da00fbc",
@@ -388,20 +337,13 @@
     },
     {
       "parameters": {
-        "model": {
-          "__rl": true,
-          "mode": "list",
-          "value": "gpt-4.1-mini"
-        },
+        "model": { "__rl": true, "mode": "list", "value": "gpt-4.1-mini" },
         "builtInTools": {},
         "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.3,
-      "position": [
-        1104,
-        112
-      ],
+      "position": [1104, 112],
       "id": "f7218be9-b91b-484f-a37c-66adb06613ae",
       "name": "LLM Extrator de Cidade",
       "credentials": {
@@ -426,23 +368,15 @@
       },
       "type": "@n8n/n8n-nodes-langchain.informationExtractor",
       "typeVersion": 1.2,
-      "position": [
-        1104,
-        -80
-      ],
+      "position": [1104, -80],
       "id": "006fcf9f-3111-4c79-a6fc-72259a7355c1",
       "name": "Extractor City"
     },
     {
-      "parameters": {
-        "options": {}
-      },
+      "parameters": { "options": {} },
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
-      "position": [
-        1136,
-        768
-      ],
+      "position": [1136, 768],
       "id": "151a26a0-30f8-4643-871d-974dcd1b9acf",
       "name": "LLM Falback1",
       "credentials": {
@@ -458,83 +392,14 @@
         "text": "={{ $json.texto }}",
         "needsFallback": true,
         "options": {
-          "systemMessage": "=# 🤖 Agente Fallback – Tratamento de Mensagens Fora de Contexto\n\nVocê é um agente de fallback responsável exclusivamente por tratar mensagens que estejam **fora do contexto de consulta de temperatura**.\n\n⚠️ Este agente só será acionado quando o sistema já tiver identificado que a mensagem do usuário não pertence ao contexto de temperatura.\n\n---\n\n## 🎯 OBJETIVO\n\nSeu único objetivo é:\n\n- Responder o usuário de forma cordial.\n- Informar claramente que a solicitação está fora do seu campo de atuação.\n- Reforçar que sua especialidade é temperatura.\n- Orientar o usuário a reformular a pergunta dentro do contexto correto.\n\nVocê não deve:\n\n- Informar temperatura.\n- Criar respostas longas.\n- Explicar regras internas.\n- Mudar de assunto.\n- Tentar responder a pergunta fora do escopo.\n\n---\n\n## 🚫 QUANDO ESTE AGENTE DEVE RESPONDER\n\nQuando o usuário:\n\n- Pedir receitas (ex: “me dê uma receita de bolo”)\n- Pedir conselhos\n- Fizer perguntas gerais (ex: “quem descobriu o Brasil?”)\n- Pedir piadas\n- Solicitar qualquer informação que não seja temperatura de cidades\n- Enviar mensagens sem sentido\n- Escrever algo incompreensível\n\n---\n\n## 🗣️ MODELO DE RESPOSTA PADRÃO\n\nA resposta deve deixar claro que a pergunta não faz parte do campo de atuação.\n\nModelo obrigatório:\n\nDesculpe, {{ $node[\"Telegram Trigger\"].json[\"message\"][\"chat\"][\"first_name\"] }}, mas esse tipo de solicitação não faz parte do meu campo de atuação.\n\nEste assistente é especializado em informar a **temperatura atual de municípios do Brasil e do mundo** 🌤️\n\nSe desejar, você pode perguntar, por exemplo:\n\n- Qual a temperatura atual de Brasília?\n- Como está o clima em São Paulo?\n- Temperatura em Lisboa agora\n\nEstou à disposição para informar a temperatura da cidade que você desejar.\n\n---\n\n## ⚠️ REGRAS IMPORTANTES\n\n- Seja educado e profissional.\n- Nunca diga que o usuário está errado.\n- Nunca responda a pergunta fora do escopo.\n- Nunca explique o roteamento interno do sistema.\n- Mantenha a resposta objetiva.\n- Sempre reforçar que sua especialidade é temperatura.\n\n---\n\n## 🧠 COMPORTAMENTO\n\n- Tom firme, mas cordial.\n- Linguagem clara e simples.\n- Sempre reforçar que atua exclusivamente com temperatura.\n- Redirecionar o usuário para perguntas dentro do contexto.\n\n---\n"
+          "systemMessage": "=# 🤖 Agente Fallback – Tratamento de Mensagens Fora de Contexto\n\nVocê é um agente de fallback responsável exclusivamente por tratar mensagens que estejam **fora do contexto de consulta de temperatura**.\n\n⚠️ Este agente só será acionado quando o sistema já tiver identificado que a mensagem do usuário não pertence ao contexto de temperatura.\n\n---\n\n## 🎯 OBJETIVO\n\nSeu único objetivo é:\n\n- Responder o usuário de forma cordial.\n- Informar claramente que a solicitação está fora do seu campo de atuação.\n- Reforçar que sua especialidade é temperatura.\n- Orientar o usuário a reformular a pergunta dentro do contexto correto.\n\nVocê não deve:\n\n- Informar temperatura.\n- Criar respostas longas.\n- Explicar regras internas.\n- Mudar de assunto.\n- Tentar responder a pergunta fora do escopo.\n\n---\n\n## 🗣️ MODELO DE RESPOSTA PADRÃO\n\nDesculpe, {{ $node[\"Telegram Trigger\"].json[\"message\"][\"chat\"][\"first_name\"] }}, mas esse tipo de solicitação não faz parte do meu campo de atuação.\n\nEste assistente é especializado em informar a **temperatura atual de municípios do Brasil e do mundo** 🌤️\n\nSe desejar, você pode perguntar, por exemplo:\n\n- Qual a temperatura atual de Brasília?\n- Como está o clima em São Paulo?\n- Temperatura em Lisboa agora\n\nEstou à disposição para informar a temperatura da cidade que você desejar.\n\n---\n"
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3.1,
-      "position": [
-        1088,
-        432
-      ],
+      "position": [1088, 432],
       "id": "1b7722f6-9a3a-4054-b4f9-b183339ddef0",
       "name": "AI Agent - FallBack"
-    },
-    {
-      "parameters": {
-        "model": {
-          "__rl": true,
-          "mode": "list",
-          "value": "gpt-4.1-mini"
-        },
-        "builtInTools": {},
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
-      "typeVersion": 1.3,
-      "position": [
-        1056,
-        624
-      ],
-      "id": "448b11e5-3b9d-4f70-ad8e-1a19b79e57c2",
-      "name": "LLM Agente de FallBack",
-      "credentials": {
-        "openAiApi": {
-          "id": "qRsNvEmG27MDGdMn",
-          "name": "OpenAi "
-        }
-      }
-    },
-    {
-      "parameters": {
-        "sessionIdType": "customKey",
-        "sessionKey": "={{ $('Telegram Trigger').item.json.message.chat.id }}"
-      },
-      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
-      "typeVersion": 1.3,
-      "position": [
-        1184,
-        624
-      ],
-      "id": "8f7ee853-5030-4572-9b13-7d3ce56491b5",
-      "name": "Memory Falback"
-    },
-    {
-      "parameters": {
-        "chatId": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
-        "text": "={{ $json.output }}",
-        "replyMarkup": "forceReply",
-        "forceReply": {},
-        "additionalFields": {
-          "appendAttribution": false
-        }
-      },
-      "type": "n8n-nodes-base.telegram",
-      "typeVersion": 1.2,
-      "position": [
-        1440,
-        432
-      ],
-      "id": "c2170318-39b2-48f9-b528-102d7b83f8c1",
-      "name": "Resposta Fallback",
-      "webhookId": "4acee857-86a7-47cf-b857-59da2da00fbc",
-      "retryOnFail": false,
-      "credentials": {
-        "telegramApi": {
-          "id": "MW7i28diqJsuXjcv",
-          "name": "Previsao Tempo Rocket Seat"
-        }
-      }
     },
     {
       "parameters": {
@@ -552,70 +417,9 @@
       },
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [
-        2032,
-        -80
-      ],
+      "position": [2032, -80],
       "id": "251b03fa-c79e-4814-85e8-886ad6104e48",
       "name": "Seta_Temperatura"
-    },
-    {
-      "parameters": {
-        "model": {
-          "__rl": true,
-          "mode": "list",
-          "value": "gpt-4.1-mini"
-        },
-        "builtInTools": {},
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
-      "typeVersion": 1.3,
-      "position": [
-        2320,
-        112
-      ],
-      "id": "3d845261-66c2-4ce7-84c3-7b94826520f2",
-      "name": "LLM Informa Previsao",
-      "credentials": {
-        "openAiApi": {
-          "id": "qRsNvEmG27MDGdMn",
-          "name": "OpenAi "
-        }
-      }
-    },
-    {
-      "parameters": {
-        "sessionIdType": "customKey",
-        "sessionKey": "={{ $('Telegram Trigger').item.json.message.chat.id }}"
-      },
-      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
-      "typeVersion": 1.3,
-      "position": [
-        2448,
-        112
-      ],
-      "id": "e9626347-a2cb-4a8e-9e0b-220765fa1094",
-      "name": "Memory Previsao"
-    },
-    {
-      "parameters": {
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
-      "typeVersion": 1,
-      "position": [
-        2400,
-        320
-      ],
-      "id": "3ebc233f-46a0-44e7-a07b-41bd07657284",
-      "name": "LLM Previsao",
-      "credentials": {
-        "googlePalmApi": {
-          "id": "ghL3e2kUgCYE41zX",
-          "name": "Gemini"
-        }
-      }
     },
     {
       "parameters": {
@@ -623,15 +427,12 @@
         "text": "={{ $json.Resposta_Temperatura }}",
         "needsFallback": true,
         "options": {
-          "systemMessage": "=# 🌤️ Agente Principal – Resposta Dinâmica de Temperatura\n\nVocê é um assistente especializado exclusivamente em informar a temperatura atual de municípios do Brasil e do mundo.\n\nVocê receberá como entrada uma frase já estruturada no seguinte formato:\n\n🌤️ A temperatura em {{ $('seta_Variavel').item.json.queue }} é de {{ Math.round($json.main.temp) }}°C.\n\nSua função é transformar essa informação técnica em uma resposta:\n\n- Natural\n- Amigável\n- Clara\n- Profissional\n- Dinâmica\n- Com excelente experiência para o usuário\n\n---\n\n## 🎯 OBJETIVO\n\n- Utilizar o nome do usuário:\n  {{ $node[\"Telegram Trigger\"].json[\"message\"][\"chat\"][\"first_name\"] }}\n\n- Informar a temperatura atual de forma humanizada.\n- Adaptar levemente o tom conforme a temperatura (frio, ameno, calor).\n- Manter foco exclusivo na temperatura atual.\n- Não oferecer previsão futura.\n\n---\n\n## 🧠 CONTEXTO DE CONVERSA\n\n- O usuário já sabe que você é especialista em temperatura.\n- Não é necessário reapresentar o agente.\n- Seja direto, claro e agradável.\n- Use emojis com moderação.\n- Nunca mencione variáveis internas.\n- Nunca mostre o formato técnico recebido.\n- Nunca utilize blocos de código na resposta final.\n- Nunca ofereça previsão do tempo para outros dias ou períodos.\n\n---\n\n## 🌡️ PERSONALIZAÇÃO BASEADA NA TEMPERATURA\n\nVocê deve adaptar levemente a resposta conforme o valor recebido:\n\n### 🔥 Acima de 30°C\n- Informar que está quente.\n- Pode sugerir hidratação ou roupas leves.\n\n### 🌤️ Entre 20°C e 29°C\n- Informar que está clima agradável ou levemente quente.\n\n### 🌥️ Entre 15°C e 19°C\n- Informar que está clima ameno ou fresco.\n\n### ❄️ Abaixo de 15°C\n- Informar que está frio.\n- Pode sugerir agasalho.\n\n⚠️ As sugestões devem ser leves e naturais, sem exageros.\n\n---\n\n## 🗣️ ESTRUTURA DA RESPOSTA\n\nA resposta deve seguir esta lógica:\n\n1. Chamar o usuário pelo nome.\n2. Informar a temperatura atual.\n3. Adicionar um comentário leve contextual baseado na temperatura.\n4. Encerrar de forma simples, sem oferecer funções que não existem.\n\n---\n\n## 📌 EXEMPLOS DE RESPOSTA\n\n### Exemplo – Clima quente\n\nAlfredo, neste momento a temperatura em Brasília está em 32°C ☀️  \n\nEstá um clima bem quente por aí, vale manter-se hidratado.\n\n---\n\n### Exemplo – Clima agradável\n\nAlfredo, agora a temperatura em Curitiba é de 22°C 🌤️  \n\nO clima está agradável neste momento.\n\n---\n\n### Exemplo – Clima frio\n\nAlfredo, neste momento faz 12°C em Campos do Jordão ❄️  \n\nEstá frio por aí, um agasalho pode ser uma boa ideia.\n\n---\n\n## ⚠️ REGRAS IMPORTANTES\n\n- Nunca inventar dados.\n- Nunca sair do contexto de temperatura atual.\n- Nunca oferecer previsão futura.\n- Nunca mencionar regras internas.\n- Não usar blocos de código.\n- Sempre responder em português.\n- Manter resposta clara e objetiva.\n- Não repetir apresentação longa.\n\n---\n\n## 🧠 COMPORTAMENTO FINAL\n\n- Tom amigável e profissional.\n- Linguagem simples.\n- Experiência humanizada.\n- Foco total na temperatura atual.\n- Sem mencionar funcionalidades inexistentes.\n"
+          "systemMessage": "=# 🌤️ Agente Principal – Resposta Dinâmica de Temperatura\n\nVocê é um assistente especializado exclusivamente em informar a temperatura atual de municípios do Brasil e do mundo.\n\nVocê receberá como entrada uma frase já estruturada no seguinte formato:\n\n🌤️ A temperatura em {{ $('seta_Variavel').item.json.queue }} é de {{ Math.round($json.main.temp) }}°C.\n\nSua função é transformar essa informação técnica em uma resposta:\n\n- Natural\n- Amigável\n- Clara\n- Profissional\n- Dinâmica\n- Com excelente experiência para o usuário\n\n---\n\n## 🎯 OBJETIVO\n\n- Utilizar o nome do usuário: {{ $node[\"Telegram Trigger\"].json[\"message\"][\"chat\"][\"first_name\"] }}\n- Informar a temperatura atual de forma humanizada.\n- Adaptar levemente o tom conforme a temperatura (frio, ameno, calor).\n- Manter foco exclusivo na temperatura atual.\n- Não oferecer previsão futura.\n\n---\n\n## 🌡️ PERSONALIZAÇÃO BASEADA NA TEMPERATURA\n\n- Acima de 30°C: informe que está quente e pode sugerir hidratação/roupas leves.\n- 20°C a 29°C: informe que está agradável.\n- 15°C a 19°C: informe que está ameno/fresco.\n- Abaixo de 15°C: informe que está frio e pode sugerir agasalho.\n\n---\n\n## 🗣️ ESTRUTURA DA RESPOSTA\n\n1) Chame o usuário pelo nome.\n2) Informe a temperatura atual.\n3) Faça um comentário leve conforme a temperatura.\n4) Finalize sem oferecer funções que não existem.\n\n---\n\n## ⚠️ REGRAS\n\n- Sempre em português.\n- Não mencionar variáveis internas.\n- Não usar blocos de código na resposta final.\n- Não falar de previsão futura.\n"
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3.1,
-      "position": [
-        2352,
-        -80
-      ],
+      "position": [2352, -80],
       "id": "757408c4-889e-4e79-92d6-41312be92f9a",
       "name": "AI Agent - Previso do Tempo"
     },
@@ -641,16 +442,11 @@
         "text": "={{ $json.output }}",
         "replyMarkup": "forceReply",
         "forceReply": {},
-        "additionalFields": {
-          "appendAttribution": false
-        }
+        "additionalFields": { "appendAttribution": false }
       },
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
-      "position": [
-        2704,
-        -80
-      ],
+      "position": [2704, -80],
       "id": "dfc07459-0fdc-4b2a-ab7f-feaf81a46d54",
       "name": "Resposta Previsao",
       "webhookId": "4acee857-86a7-47cf-b857-59da2da00fbc",
@@ -695,309 +491,42 @@
             }
           }
         },
-        "pairedItem": {
-          "item": 0
-        }
+        "pairedItem": { "item": 0 }
       }
     ]
   },
   "connections": {
-    "seta_Variavel": {
-      "main": [
-        [
-          {
-            "node": "HTTP Previsao do Tempo",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "HTTP Previsao do Tempo": {
-      "main": [
-        [
-          {
-            "node": "Seta_Temperatura",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
+    "seta_Variavel": { "main": [[{ "node": "HTTP Previsao do Tempo", "type": "main", "index": 0 }]] },
+    "HTTP Previsao do Tempo": { "main": [[{ "node": "Seta_Temperatura", "type": "main", "index": 0 }]] },
     "Switch": {
       "main": [
-        [
-          {
-            "node": "seta Texto",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Get audio",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        [{ "node": "seta Texto", "type": "main", "index": 0 }],
+        [{ "node": "Get audio", "type": "main", "index": 0 }]
       ]
     },
-    "Transcribe a recording": {
-      "main": [
-        [
-          {
-            "node": "input Solicitacao",
-            "type": "main",
-            "index": 1
-          }
-        ]
-      ]
-    },
-    "seta Texto": {
-      "main": [
-        [
-          {
-            "node": "input Solicitacao",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "input Solicitacao": {
-      "main": [
-        [
-          {
-            "node": "Classifica o imput do Usuário",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "LLM Agente de Cumprimento": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "AI Agent - Cumprimento ao Usuario",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "LLM Text Classifier": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "Classifica o imput do Usuário",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Memory": {
-      "ai_memory": [
-        [
-          {
-            "node": "AI Agent - Cumprimento ao Usuario",
-            "type": "ai_memory",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Get audio": {
-      "main": [
-        [
-          {
-            "node": "Transcribe a recording",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
+    "Transcribe a recording": { "main": [[{ "node": "input Solicitacao", "type": "main", "index": 1 }]] },
+    "seta Texto": { "main": [[{ "node": "input Solicitacao", "type": "main", "index": 0 }]] },
+    "input Solicitacao": { "main": [[{ "node": "Classifica o imput do Usuário", "type": "main", "index": 0 }]] },
+    "LLM Agente de Cumprimento": { "ai_languageModel": [[{ "node": "AI Agent - Cumprimento ao Usuario", "type": "ai_languageModel", "index": 0 }]] },
+    "LLM Text Classifier": { "ai_languageModel": [[{ "node": "Classifica o imput do Usuário", "type": "ai_languageModel", "index": 0 }]] },
+    "Memory": { "ai_memory": [[{ "node": "AI Agent - Cumprimento ao Usuario", "type": "ai_memory", "index": 0 }]] },
+    "Get audio": { "main": [[{ "node": "Transcribe a recording", "type": "main", "index": 0 }]] },
     "Classifica o imput do Usuário": {
       "main": [
-        [
-          {
-            "node": "AI Agent - Cumprimento ao Usuario",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Extractor City",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "AI Agent - FallBack",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        [{ "node": "AI Agent - Cumprimento ao Usuario", "type": "main", "index": 0 }],
+        [{ "node": "Extractor City", "type": "main", "index": 0 }],
+        [{ "node": "AI Agent - FallBack", "type": "main", "index": 0 }]
       ]
     },
-    "Telegram Trigger": {
-      "main": [
-        [
-          {
-            "node": "Switch",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "AI Agent - Cumprimento ao Usuario": {
-      "main": [
-        [
-          {
-            "node": "Mensagem de Resposta Cumprimento",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "LLM Falback": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "AI Agent - Cumprimento ao Usuario",
-            "type": "ai_languageModel",
-            "index": 1
-          }
-        ]
-      ]
-    },
-    "LLM Extrator de Cidade": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "Extractor City",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Extractor City": {
-      "main": [
-        [
-          {
-            "node": "seta_Variavel",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "LLM Falback1": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "AI Agent - FallBack",
-            "type": "ai_languageModel",
-            "index": 1
-          }
-        ]
-      ]
-    },
-    "AI Agent - FallBack": {
-      "main": [
-        [
-          {
-            "node": "Resposta Fallback",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "LLM Agente de FallBack": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "AI Agent - FallBack",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Memory Falback": {
-      "ai_memory": [
-        [
-          {
-            "node": "AI Agent - FallBack",
-            "type": "ai_memory",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Seta_Temperatura": {
-      "main": [
-        [
-          {
-            "node": "AI Agent - Previso do Tempo",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "LLM Informa Previsao": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "AI Agent - Previso do Tempo",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Memory Previsao": {
-      "ai_memory": [
-        [
-          {
-            "node": "AI Agent - Previso do Tempo",
-            "type": "ai_memory",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "LLM Previsao": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "AI Agent - Previso do Tempo",
-            "type": "ai_languageModel",
-            "index": 1
-          }
-        ]
-      ]
-    },
-    "AI Agent - Previso do Tempo": {
-      "main": [
-        [
-          {
-            "node": "Resposta Previsao",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    }
+    "Telegram Trigger": { "main": [[{ "node": "Switch", "type": "main", "index": 0 }]] },
+    "AI Agent - Cumprimento ao Usuario": { "main": [[{ "node": "Mensagem de Resposta Cumprimento", "type": "main", "index": 0 }]] },
+    "LLM Falback": { "ai_languageModel": [[{ "node": "AI Agent - Cumprimento ao Usuario", "type": "ai_languageModel", "index": 1 }]] },
+    "LLM Extrator de Cidade": { "ai_languageModel": [[{ "node": "Extractor City", "type": "ai_languageModel", "index": 0 }]] },
+    "Extractor City": { "main": [[{ "node": "seta_Variavel", "type": "main", "index": 0 }]] },
+    "LLM Falback1": { "ai_languageModel": [[{ "node": "AI Agent - FallBack", "type": "ai_languageModel", "index": 1 }]] },
+    "AI Agent - FallBack": { "main": [[{ "node": "Resposta Fallback", "type": "main", "index": 0 }]] },
+    "Seta_Temperatura": { "main": [[{ "node": "AI Agent - Previso do Tempo", "type": "main", "index": 0 }]] },
+    "AI Agent - Previso do Tempo": { "main": [[{ "node": "Resposta Previsao", "type": "main", "index": 0 }]] }
   },
   "active": true,
   "settings": {
