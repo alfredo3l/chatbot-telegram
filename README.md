@@ -1,298 +1,272 @@
-# 📘 README
+🌤️ Bot Clima RocketSeat – Arquitetura Enterprise
 
-Este projeto implementa um **Chatbot Inteligente de Clima no Telegram**, desenvolvido no **n8n**, que consulta a **OpenWeather API** para retornar a **temperatura atual de qualquer município do Brasil e do mundo** informado pelo usuário.
+n8n + Telegram + OpenAI + Gemini + OpenWeather
 
-O bot possui:
+📌 Visão Geral
 
-- Tratamento inteligente de mensagens
-- Identificação de cumprimento
-- Respostas dinâmicas e humanizadas
-- Agente de fallback para mensagens fora do contexto
-- Integração com memória de conversa
-- Experiência amigável e profissional
+Este projeto implementa um Chatbot Inteligente de Clima no Telegram, desenvolvido em n8n, utilizando múltiplos modelos de IA e integração com a OpenWeather API para informar a temperatura atual de qualquer município do Brasil e do mundo.
 
----
+A arquitetura foi projetada com separação clara de responsabilidades, controle de contexto por sessão, tratamento de erros e humanização dinâmica de respostas.
 
-# 🌤️ Visão Geral do Projeto
+🧠 Arquitetura de Inteligência Artificial
 
-O sistema é composto por múltiplos agentes organizados no workflow:
+O fluxo utiliza múltiplos modelos especializados:
 
-1. **Classificador de intenção**
-2. **Agente principal de temperatura**
-3. **Agente fallback (fora de contexto)**
-4. **Integração com OpenWeather**
-5. **Resposta dinâmica personalizada**
+🔹 OpenAI (gpt-4.1-mini)
 
-O objetivo é oferecer uma experiência natural, amigável e focada exclusivamente em **temperatura atual**.
+Classificação de intenção
 
----
+Humanização da resposta de temperatura
 
-# 📌 Funcionalidades
+Agente de cumprimento
 
-- ✅ Integração com **Telegram Bot**
-- ✅ Consulta de temperatura em tempo real via **OpenWeather**
-- ✅ Identificação automática de cumprimento
-- ✅ Resposta personalizada com nome do usuário
-- ✅ Resposta adaptativa conforme temperatura (frio, ameno, quente)
-- ✅ Tratamento de mensagens fora de contexto
-- ✅ Experiência humanizada
-- ✅ Suporte a mensagens de texto e áudio
-- ✅ Workflow contínuo (publicado)
+Extração estruturada da cidade
 
----
+🔹 OpenAI Transcription
 
-# 🧠 Inteligência Conversacional
+Transcrição de mensagens de áudio (OGG)
 
-O bot possui três comportamentos principais:
+🔹 Google Gemini
 
-## 1️⃣ Cumprimento Inicial
+Agente de fallback
 
-Quando o usuário envia:
+Suporte adicional ao agente principal
 
-- Olá
-- Oi
-- Bom dia
-- Boa tarde
-- Boa noite
+🏗️ Arquitetura Técnica do Workflow
+Telegram Trigger
+      ↓
+Switch (Texto ou Áudio)
+      ↓
+Transcrição (se áudio)
+      ↓
+Merge da entrada
+      ↓
+Classificador de Intenção (LLM)
+      ↓
+ ┌───────────────┬────────────────┬──────────────┐
+Cumprimento   Previsão        Fallback
+      ↓              ↓              ↓
+Agente IA     Extrator Cidade   Agente Fallback
+                    ↓
+             Sanitização (IIFE)
+                    ↓
+           HTTP OpenWeather
+                    ↓
+                IF (200?)
+               /        \
+      Humanização     Tratamento Erro
+           ↓
+      Resposta Telegram
 
-O bot:
+🧠 Controle de Memória Conversacional
 
-- Cumprimenta pelo nome
-- Informa data e hora atual
-- Explica que é especializado em temperatura
-- Informa que aceita texto e áudio
+O projeto utiliza:
 
-Evita repetição caso já tenha cumprimentado anteriormente (controle de memória).
+Memory Buffer Window
 
----
 
-## 2️⃣ Consulta de Temperatura
+Com:
 
-Quando o usuário pergunta:
+sessionKey = chat.id do Telegram
 
-- Qual a temperatura em Brasília?
-- Temperatura em São Paulo
-- Como está o clima em Lisboa?
 
-O fluxo:
+Isso garante:
 
-1. Identifica a cidade
-2. Consulta OpenWeather
-3. Retorna a temperatura atual
-4. Humaniza a resposta conforme o valor:
+Contexto isolado por usuário
 
-| Faixa de Temperatura | Comportamento |
-|----------------------|--------------|
-| Acima de 30°C        | Indica calor |
-| 20°C – 29°C          | Clima agradável |
-| 15°C – 19°C          | Clima ameno |
-| Abaixo de 15°C       | Indica frio |
+Evita repetição de saudação
 
-⚠️ O bot **não fornece previsão futura**, apenas temperatura atual.
+Conversas independentes entre usuários
 
----
+🎯 Funcionalidades Implementadas
 
-## 3️⃣ Mensagens Fora de Contexto (Fallback)
+✅ Classificação automática de intenção
+✅ Extração estruturada da cidade
+✅ Sanitização robusta de input
+✅ Suporte a texto e áudio
+✅ Humanização baseada na temperatura
+✅ Controle de repetição de cumprimento
+✅ Fallback especializado
+✅ Tratamento de erro da API
+✅ Controle de contexto por sessão
+✅ Resposta personalizada com nome do usuário
 
-Se o usuário enviar algo como:
+🔎 Sanitização de Input (Proteção contra erro de API)
 
-- “Me dê uma receita de bolo”
-- “Conte uma piada”
-- “Quem descobriu o Brasil?”
+A cidade extraída passa por tratamento avançado:
 
-O agente fallback responde cordialmente:
+Remove espaços extras
 
-> Este assistente é especializado em informar a temperatura atual de municípios do Brasil e do mundo 🌤️  
-> Esse tipo de solicitação não faz parte do seu campo de atuação.
+Converte para minúsculas
 
-E orienta o usuário a reformular dentro do contexto correto.
+Remove acentos
 
----
+Remove caracteres especiais
 
-# 📂 Estrutura do Workflow
+Normaliza múltiplos espaços
 
-Fluxo principal:
+Implementado com IIFE no Set Node.
 
-1. **Telegram Trigger**  
-   Recebe mensagens do usuário.
+🌡️ Integração com OpenWeather
 
-2. **Classificador de Intenção**  
-   Identifica:
-   - Cumprimento
-   - Consulta de temperatura
-   - Fora de contexto
+Endpoint utilizado:
 
-3. **Tratamento de Cumprimento**  
-   Gera resposta inicial personalizada.
+https://api.openweathermap.org/data/2.5/weather
 
-4. **Preparar Query OpenWeather**  
-   Monta a requisição HTTP.
 
-5. **Consultar OpenWeather (HTTP Request)**  
-   Chamada à API.
+Query Parameters:
 
-6. **Formatação Dinâmica da Resposta**  
-   Transforma:
+q → cidade sanitizada
 
-   🌤️ A temperatura em Cidade é de XX°C
+units=metric
 
-   em resposta humanizada.
+lang=pt_br
 
-7. **Fallback (fora de contexto)**  
-Resposta redirecionadora.
+appid=sua_chave_aqui (placeholder)
 
-8. **Telegram – Enviar Mensagem**  
-Retorna resposta ao usuário.
+⚠️ Atualmente a chave está como placeholder no node HTTP.
 
----
+Recomendado para produção:
 
-# 🚀 Como importar o workflow no n8n
+Variável de ambiente
+OU
 
-1. Acesse o painel do n8n.
-2. Vá em **Workflows → Import from file**.
-3. Selecione o arquivo JSON.
-4. Salve o workflow.
+Credential nativa do n8n
 
----
+🔐 Segurança – Permissões Mínimas Telegram
 
-# 🔐 Configuração das Credenciais
+O bot necessita apenas:
 
-## 1️⃣ Telegram Bot
+✅ Receber mensagens privadas
+✅ Enviar respostas
 
-### Criar o Bot
+Não é necessário:
 
-1. No Telegram, converse com **@BotFather**.
-2. Use `/newbot`.
-3. Copie o **Bot Token**.
+❌ Permissão administrativa em grupos
+❌ Deletar mensagens
+❌ Convidar usuários
+❌ Fixar mensagens
 
-### Configurar no n8n
+Recomendado no BotFather:
 
-1. Vá em **Credentials → New**
-2. Escolha **Telegram API**
-3. Insira o Bot Token
-4. Salve
+/setprivacy → Enable
 
----
 
-## 2️⃣ OpenWeather API
+Isso impede que o bot monitore mensagens em grupo sem menção.
 
-### Obter API Key
+🧠 Classificação de Intenção
 
-1. Acesse:
-https://openweathermap.org/
-2. Crie uma conta
-3. Gere uma API Key
+Categorias implementadas:
 
----
+Cumprimento
 
-### Configurar no n8n
+Previsão do Tempo
 
-#### Opção A — Variável de Ambiente (Recomendado)
+FallBack
 
-Defina:
+A classificação é feita por LLM com auto-fixing habilitado.
 
-OPENWEATHER_API_KEY=sua_chave_aqui
+🌤️ Humanização Dinâmica da Temperatura
 
+O agente principal adapta o tom conforme a faixa térmica:
 
-Reinicie o n8n após definir.
+Temperatura	Comportamento
+> 30°C	Indica calor e sugere hidratação
+20°C – 29°C	Clima agradável
+15°C – 19°C	Clima ameno
+< 15°C	Indica frio e sugere agasalho
 
-#### Opção B — Credencial no n8n
+⚠️ O foco principal é temperatura atual.
 
-1. Vá em **Credentials → New**
-2. Escolha **HTTP Header Auth** ou similar
-3. Insira a API Key
-4. Associe ao nó HTTP
+🎤 Suporte a Áudio
 
----
+Fluxo:
 
-# ⚙️ Variáveis Utilizadas
+Recebe áudio OGG
 
-| Variável | Descrição |
-|----------|----------|
-| OPENWEATHER_API_KEY | Chave da API OpenWeather |
-| TELEGRAM_BOT_TOKEN | Token do Bot Telegram |
+Baixa o arquivo via Telegram
 
----
+Transcreve usando OpenAI
 
-# ▶️ Publicar o Workflow (Obrigatório)
+Processa como texto normal
 
-1. Abra o workflow
-2. Clique em **Publish**
-3. Após publicar:
-   - O webhook é registrado
-   - O bot passa a responder automaticamente
+⚠️ Tratamento de Erros
 
-⚠️ Se reiniciar máquina ou usar ngrok, será necessário publicar novamente.
+Caso a API retorne código diferente de 200:
 
----
+Fluxo IF intercepta
 
-# 🧪 Como Usar o Chatbot
+Mensagem de erro é enviada ao usuário
 
-No Telegram, envie:
+⚠️ Em produção recomenda-se ocultar detalhes técnicos do erro.
 
-### Exemplos válidos:
+⚙️ Variáveis Utilizadas (Placeholder)
+OPENWEATHER_API_KEY=SUA_API_AQUI
+TELEGRAM_BOT_TOKEN=SEU_TOKEN_AQUI
 
-- Qual a temperatura em Brasília?
-- Temperatura em São Paulo
-- Como está o clima em Lisboa?
-- Rio de Janeiro
 
----
+Atualmente o workflow mantém a chave como:
 
-## ✅ Exemplo de Resposta
+sua_chave_aqui
 
-Alfredo, neste momento a temperatura em Brasília está em 32°C ☀️  
 
-Está um clima bem quente por aí.
+Recomendado substituir antes de deploy.
 
----
+🚀 Deploy
 
-## ❌ Exemplo Fora de Contexto
+Pode ser executado:
 
-Pergunta:
-> Me dê uma receita de bolo
+Localmente
 
-Resposta:
-> Este assistente é especializado em informar a temperatura atual de municípios do Brasil e do mundo 🌤️  
-> Esse tipo de solicitação não faz parte do seu campo de atuação.
+Em VPS
 
----
+Via Docker
 
-# 🏗️ Tecnologias Utilizadas
+Com domínio próprio e SSL
 
-- **n8n**
-- **Telegram Bot API**
-- **OpenWeather API**
-- **HTTP Request Node**
-- **IF Nodes (validação lógica)**
+Requer:
 
----
+Publicar workflow no n8n
 
-# 🎯 Escopo do Projeto
+Webhook ativo
 
-✔️ Temperatura atual  
-✔️ Resposta humanizada  
-✔️ Tratamento de erro  
-✔️ Controle de contexto  
+Bot configurado
 
-❌ Não fornece previsão futura  
-❌ Não responde perguntas gerais  
-❌ Não executa múltiplas funções  
+📈 Escopo do Projeto
 
----
+✔ Temperatura atual
+✔ Resposta humanizada
+✔ Controle de contexto
+✔ Multi-model LLM
+✔ Tratamento robusto de input
 
-# 📈 Evoluções Futuras Possíveis
+Não implementado:
 
-- Sensação térmica
-- Umidade
-- Condição climática (chuva, nublado)
-- Histórico de consultas
-- Dashboard administrativo
+Histórico persistente de longo prazo
 
----
+Cache de consultas
 
-# 👨‍💻 Autor
+Dashboard administrativo
 
-Projeto desenvolvido com n8n + OpenWeather + Telegram  
-Chatbot especializado em temperatura atual 🌤️
+Monitoramento estruturado
 
+🏆 Nível Arquitetural
+
+Este projeto demonstra:
+
+Orquestração de múltiplos LLMs
+
+Separação clara de agentes
+
+Sanitização segura de input
+
+Uso correto de memória por sessão
+
+Tratamento estruturado de erro
+
+Design modular e escalável
+
+👨‍💻 Projeto
+
+Bot Clima RocketSeat
+Arquitetura enterprise com n8n + IA + OpenWeather 🌤️
